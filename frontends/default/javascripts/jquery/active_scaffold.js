@@ -783,6 +783,9 @@ var ActiveScaffold = {
       case 'tr':
        $(this).trigger('as:list_row_loaded');
        break;
+      case 'form':
+       $(this).trigger('as:form_loaded');
+       break;
       }
     });
   }
@@ -985,10 +988,12 @@ ActiveScaffold.ActionLink.Record = ActiveScaffold.ActionLink.Abstract.extend({
 
     if (this.position == 'after') {
       this.target.after(content);
+      ActiveScaffold.trigger_load_events(this.target.next().find('[data-as_load]'));
       this.set_adapter(this.target.next());
     }
     else if (this.position == 'before') {
       this.target.before(content);
+      ActiveScaffold.trigger_load_events(this.target.prev().find('[data-as_load]'));
       this.set_adapter(this.target.prev());
     }
     else {
@@ -1049,6 +1054,7 @@ ActiveScaffold.ActionLink.Table = ActiveScaffold.ActionLink.Abstract.extend({
   insert: function(content) {
     if (this.position == 'top') {
       this.target.prepend(content);
+      ActiveScaffold.trigger_load_events(this.target.children().first().find('[data-as_load]'));
       this.set_adapter(this.target.children().first());
     }
     else {

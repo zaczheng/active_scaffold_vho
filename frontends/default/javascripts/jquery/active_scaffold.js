@@ -237,6 +237,8 @@ $(document).ready(function() {
     }
     return true;
   });
+  ActiveScaffold.trigger_load_events($('[data-as_load]'));
+  
 });
 
 /* Simple Inheritance
@@ -446,6 +448,7 @@ var ActiveScaffold = {
     if (element.attr('id')) {
       element = $('#' + element.attr('id'));
     }
+    ActiveScaffold.trigger_load_events(element.find('[data-as_load]').andSelf());
     return element;
   },
   
@@ -453,6 +456,7 @@ var ActiveScaffold = {
     if (typeof(element) == 'string') element = '#' + element; 
     element = $(element);
     element.html(html);
+    ActiveScaffold.trigger_load_events(element.find('[data-as_load]'));
     return element;
   },
   
@@ -771,6 +775,16 @@ var ActiveScaffold = {
         ActiveScaffold.create_inplace_editor(span, options);
       }
     }
+  },
+
+  trigger_load_events: function(elements){
+    elements.each(function(index) {
+      switch ($(this).attr('data-as_load')) {
+      case 'tr':
+       $(this).trigger('as:list_row_loaded');
+       break;
+      }
+    });
   }
 }
 

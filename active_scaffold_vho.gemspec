@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{active_scaffold_vho}
-  s.version = "3.0.19"
+  s.version = "3.0.20"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Many, see README"]
-  s.date = %q{2011-04-18}
+  s.date = %q{2011-09-05}
   s.description = %q{Save time and headaches, and create a more easily maintainable set of pages, with ActiveScaffold. ActiveScaffold handles all your CRUD (create, read, update, delete) user interface needs, leaving you more time to focus on more challenging (and interesting!) problems.}
   s.email = %q{activescaffold@googlegroups.com}
   s.extra_rdoc_files = [
@@ -131,6 +131,8 @@ Gem::Specification.new do |s|
     "lib/active_scaffold/bridges/carrierwave/lib/carrierwave_bridge_helpers.rb",
     "lib/active_scaffold/bridges/carrierwave/lib/form_ui.rb",
     "lib/active_scaffold/bridges/carrierwave/lib/list_ui.rb",
+    "lib/active_scaffold/bridges/country_helper/bridge.rb",
+    "lib/active_scaffold/bridges/country_helper/lib/country_helper_bridge.rb",
     "lib/active_scaffold/bridges/date_picker/bridge.rb",
     "lib/active_scaffold/bridges/date_picker/lib/datepicker_bridge.rb",
     "lib/active_scaffold/bridges/date_picker/public/javascripts/date_picker_bridge.js",
@@ -198,7 +200,6 @@ Gem::Specification.new do |s|
     "lib/active_scaffold/finder.rb",
     "lib/active_scaffold/helpers/association_helpers.rb",
     "lib/active_scaffold/helpers/controller_helpers.rb",
-    "lib/active_scaffold/helpers/country_helpers.rb",
     "lib/active_scaffold/helpers/form_column_helpers.rb",
     "lib/active_scaffold/helpers/human_condition_helpers.rb",
     "lib/active_scaffold/helpers/id_helpers.rb",

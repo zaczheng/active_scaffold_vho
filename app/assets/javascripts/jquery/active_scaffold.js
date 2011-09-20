@@ -662,6 +662,7 @@ var ActiveScaffold = {
     if (element) {
       if (options.is_subform == false) {
         this.replace(element.closest('dl'), content);
+        ActiveScaffold.trigger_load_events(element.closest('li.form-element'));
       } else {
         this.replace_html(element, content);
       }
@@ -787,6 +788,9 @@ var ActiveScaffold = {
        break;
       case 'form':
        $(this).trigger('as:form_loaded');
+       break;
+      case 'form-element':
+       $(this).trigger('as:form_element_loaded');
        break;
       }
     });

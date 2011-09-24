@@ -397,10 +397,13 @@ var ActiveScaffold = {
   },
   
   replace: function(element, html) {
-    element = $(element)
+    element = $(element);
+    var elements = element.select('[data-as_load]');
+    elements.unshift(element);
+    ActiveScaffold.trigger_unload_events(elements);
     Element.replace(element, html);
     element = $(element.readAttribute('id'));
-    var elements = element.select('[data-as_load]');
+    elements = element.select('[data-as_load]');
     elements.unshift(element);
     ActiveScaffold.trigger_load_events(elements);
     return element;
@@ -408,6 +411,7 @@ var ActiveScaffold = {
     
   replace_html: function(element, html) {
     element = $(element);
+    ActiveScaffold.trigger_unload_events(element.select('[data-as_load]'));
     element.update(html);
     ActiveScaffold.trigger_load_events(element.select('[data-as_load]'));
     return element;
@@ -590,6 +594,7 @@ var ActiveScaffold = {
 
     if (element) {
       if (options.is_subform == false) {
+        ActiveScaffold.trigger_unload_events(new Array(element.up('li.form-element')));
         this.replace(element.up('dl'), content);
         ActiveScaffold.trigger_load_events(new Array(element.up('li.form-element')));
       } else {
@@ -644,6 +649,22 @@ var ActiveScaffold = {
        break;
       case 'form-element':
        element.fire('as:form_element_loaded');
+       break;
+      }
+    });
+  },
+
+  trigger_unload_events: function(elements){
+    elements.each(function(element) {
+      switch (element.readAttribute('data-as_load')) {
+      case 'tr':
+       element.fire('as:list_row_unloaded');
+       break;
+      case 'form':
+       element.fire('as:form_unloaded');
+       break;
+      case 'form-element':
+       element.fire('as:form_element_unloaded');
        break;
       }
     });
@@ -796,6 +817,7 @@ ActiveScaffold.ActionLink.Abstract = Class.create({
 
   close: function() {
     this.enable();
+    ActiveScaffold.trigger_unload_events(this.adapter.select('[data-as_load]'));
     this.adapter.remove();
     if (this.hide_target) this.target.show();
   },
@@ -866,6 +888,7 @@ ActiveScaffold.ActionLink.Record = Class.create(ActiveScaffold.ActionLink.Abstra
     this.set.links.each(function(item) {
       if (item.url != this.url && item.is_disabled() && item.adapter) {
         item.enable();
+        ActiveScaffold.trigger_unload_events(item.adapter.select('[data-as_load]'));
         item.adapter.remove();
       }
     }.bind(this));

@@ -446,6 +446,7 @@ var ActiveScaffold = {
   replace: function(element, html) {
     if (typeof(element) == 'string') element = '#' + element; 
     element = $(element);
+    ActiveScaffold.trigger_unload_events(element.find('[data-as_load]').andSelf());
     element.replaceWith(html);
     if (element.attr('id')) {
       element = $('#' + element.attr('id'));
@@ -457,6 +458,7 @@ var ActiveScaffold = {
   replace_html: function(element, html) {
     if (typeof(element) == 'string') element = '#' + element; 
     element = $(element);
+    ActiveScaffold.trigger_unload_events(element.find('[data-as_load]'));
     element.html(html);
     ActiveScaffold.trigger_load_events(element.find('[data-as_load]'));
     return element;
@@ -659,6 +661,7 @@ var ActiveScaffold = {
 
     if (element) {
       if (options.is_subform == false) {
+        ActiveScaffold.trigger_unload_events(element.closest('li.form-element'));
         this.replace(element.closest('dl'), content);
         ActiveScaffold.trigger_load_events(element.closest('li.form-element'));
       } else {
@@ -792,6 +795,22 @@ var ActiveScaffold = {
        break;
       }
     });
+  },
+
+  trigger_unload_events: function(elements){
+    elements.each(function(index) {
+      switch ($(this).attr('data-as_load')) {
+      case 'tr':
+       $(this).trigger('as:list_row_unloaded');
+       break;
+      case 'form':
+       $(this).trigger('as:form_unloaded');
+       break;
+      case 'form-element':
+       $(this).trigger('as:form_element_unloaded');
+       break;
+      }
+    });
   }
 }
 
@@ -906,6 +925,7 @@ ActiveScaffold.ActionLink.Abstract = Class.extend({
 
   close: function() {
     this.enable();
+    ActiveScaffold.trigger_unload_events(this.adapter.find('[data-as_load]'));
     this.adapter.remove();
     if (this.hide_target) this.target.show();
   },
@@ -977,6 +997,7 @@ ActiveScaffold.ActionLink.Record = ActiveScaffold.ActionLink.Abstract.extend({
     $.each(this.set.links, function(index, item) {
       if (item.url != _this.url && item.is_disabled() && item.adapter) {
         item.enable();
+        ActiveScaffold.trigger_unload_events(item.adapter.find('[data-as_load]'));
         item.adapter.remove();
       }
     });

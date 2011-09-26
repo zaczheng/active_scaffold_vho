@@ -314,6 +314,16 @@ document.observe("dom:loaded", function() {
       ActiveScaffold.focus_first_element_of_form(as_form);
       return true;
   });
+  document.on('ajax:before', 'form.as_form', function(event) {
+    var as_form = event.findElement('form');
+    element.fire('as:form_submit');
+    return true;
+  });
+  document.on('submit', 'form.as_form[data-remote!="true"]', function(event) {
+    var as_form = event.findElement('form');
+    element.fire('as:form_submit');
+    return true;
+  });
   ActiveScaffold.trigger_load_events($$('[data-as_load]'));
 });
 

@@ -239,6 +239,16 @@ $(document).ready(function() {
     });
     return true;
   });
+  $('form.as_form').live('ajax:before', function(event) {
+    var as_form = $(this).closest("form");
+    $(this).trigger('as:form_submit');
+    return true;
+  });
+  $('form.as_form[data-remote!="true"]').live('submit', function(event) {
+    var as_form = $(this).closest("form");
+    $(this).trigger('as:form_submit');
+    return true;
+  });
   ActiveScaffold.trigger_load_events($('[data-as_load]'));
   
 });

@@ -38,10 +38,10 @@ module ActionView #:nodoc:
   #
   # Defining options[:label] lets you completely customize the list title for the embedded scaffold.
   #
-    def render_with_active_scaffold(*args, &block)
-      if args.first == :super
+    def render_with_active_scaffold(context, options, &block)
+      Rails.logger.info("render_with: context#{context.inspect}, options: #{options.inspect}")
+      if context == :super
         last_view = @view_stack.last
-        options = args[1] || {}
         options[:locals] ||= {}
         options[:locals].reverse_merge!(last_view[:locals] || {})
         if last_view[:templates].nil?
@@ -50,13 +50,11 @@ module ActionView #:nodoc:
         end
         options[:template] = last_view[:templates].shift
         @view_stack << last_view
-        result = render_without_active_scaffold options
+        result = render_without_active_scaffold nil, options
         @view_stack.pop
         result
-      elsif args.first.is_a?(Hash) and args.first[:active_scaffold]
+      elsif context.is_a?(Hash) and context[:active_scaffold]
         require 'digest/md5'
-        options = args.first
-
         remote_controller = options[:active_scaffold]
         constraints = options[:constraints]
         conditions = options[:conditions]
@@ -83,7 +81,6 @@ module ActionView #:nodoc:
         end
 
       else
-        options = args.first
         if options.is_a?(Hash)
           current_view = {:view => options[:partial], :is_template => false} if options[:partial]
           current_view = {:view => options[:template], :is_template => !!options[:template]} if current_view.nil? && options[:template]
@@ -93,7 +90,7 @@ module ActionView #:nodoc:
             @view_stack << current_view
           end
         end
-        result = render_without_active_scaffold(*args, &block)
+        result = render_without_active_scaffold(context, options, &block)
         @view_stack.pop if current_view.present?
         result
       end

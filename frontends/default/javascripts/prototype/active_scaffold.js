@@ -316,7 +316,8 @@ document.observe("dom:loaded", function() {
   });
   document.on('ajax:before', 'form.as_form', function(event) {
     var as_form = event.findElement('form');
-    element.fire('as:form_submit');
+    if(typeof(element) != "undefined")
+      element.fire('as:form_submit');
     return true;
   });
   document.on('submit', 'form.as_form[data-remote!="true"]', function(event) {
